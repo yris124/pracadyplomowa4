@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/jquery"></script>
+    <script src="https://unpkg.com/survey-jquery@1.9.27/survey.jquery.min.js"></script>
+    <link href="https://unpkg.com/survey-core@1.9.27/defaultV2.min.css" type="text/css" rel="stylesheet" />
+
+
+</head>
+
+<body>
+    <h1>Ankiety</h1>
+    <div id="surveyContainer"></div>
+
+    <script>
+        /*
+                        var survey = new Survey.Model();
+                        // Add a PersonalDetails page to the model
+                        const page = survey.addNewPage("PersonalDetails");
+                        // Add a FirstName question to the page
+                        const firstName = page.addNewQuestion("text", "FirstName");
+                        firstName.title = "Enter your first name:";
+
+                        // Add a LastName question to the page
+                        const lastName = page.addNewQuestion("text", "LastName");
+                        lastName.title = "Enter your last name:";
+
+                        // Add a Contacts panel to the page
+                        const panel = page.addNewPanel("Contacts");
+                        panel.title = "Contacts (optional)";
+                        panel.state = "collapsed";
+
+                        // Add a Telegram question to the panel
+                        const telegram = panel.addNewQuestion("text", "Telegram");
+                        telegram.title = "Telegram:"
+
+                        // Add a GitHub question to the panel
+                        const github = panel.addNewQuestion("text", "GitHub");
+                        github.title = "GitHub username:"
+                */
+
+        const surveyJson = {
+            pages: [{
+                elements: [{
+                    type: "html",
+                    html: "<h2>In this survey, we will ask you a couple questions about your impressions of our product.</h2>"
+                }]
+            }, {
+                elements: [{
+                    name: "satisfaction-score",
+                    title: "How would you describe your experience with our product?",
+                    type: "radiogroup",
+                    choices: [{
+                        value: 5,
+                        text: "Fully satisfying"
+                    }, {
+                        value: 4,
+                        text: "Generally satisfying"
+                    }, {
+                        value: 3,
+                        text: "Neutral"
+                    }, {
+                        value: 2,
+                        text: "Rather unsatisfying"
+                    }, {
+                        value: 1,
+                        text: "Not satisfying at all"
+                    }],
+                    isRequired: true
+                }]
+            }, {
+                elements: [{
+                    name: "what-would-make-you-more-satisfied",
+                    title: "What can we do to make your experience more satisfying?",
+                    type: "comment",
+                    visibleIf: "{satisfaction-score} = 4"
+                }, {
+                    name: "nps-score",
+                    title: "On a scale of zero to ten, how likely are you to recommend our product to a friend or colleague?",
+                    type: "rating",
+                    rateMin: 0,
+                    rateMax: 10
+                }],
+                visibleIf: "{satisfaction-score} >= 4"
+            }, {
+                elements: [{
+                    name: "how-can-we-improve",
+                    title: "In your opinion, how could we improve our product?",
+                    type: "comment"
+                }],
+                visibleIf: "{satisfaction-score} = 3"
+            }, {
+                elements: [{
+                    name: "disappointing-experience",
+                    title: "Please let us know why you had such a disappointing experience with our product",
+                    type: "comment"
+                }],
+                visibleIf: "{satisfaction-score} =< 2"
+            }],
+            showQuestionNumbers: "off",
+            pageNextText: "Forward",
+            completeText: "Submit",
+            showPrevButton: false,
+            firstPageIsStarted: true,
+            startSurveyText: "Take the Survey",
+            completedHtml: "Thank you for your feedback!",
+        };
+
+
+        /*
+
+
+        const surveyJson = {
+            pages: [{
+                name: "PersonalDetails",
+                elements: [{
+                    type: "text",
+                    name: "FirstName",
+                    title: "Enter your first name:"
+                }, {
+                    type: "text",
+                    name: "LastName",
+                    title: "Enter your last name:"
+                }, {
+                    type: "panel",
+                    name: "Contacts",
+                    title: "Contacts (optional)",
+                    elements: [{
+                        type: "text",
+                        name: "GitHub"
+                    }]
+                }]
+            }]
+        }; */
+
+
+
+
+        const survey = new Survey.Model(surveyJson);
+
+        survey.onComplete.add(function(sender, options) {
+            alert(JSON.stringify(sender.data));
+            /*
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "YourServiceForStoringSurveyResultsAsJSON_URL");
+            xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+            xhr.send(JSON.stringify(sender.data));
+            */
+        });
+
+        $(function() {
+            // Render the survey inside the page
+            $("#surveyContainer").Survey({
+                model: survey
+            });
+
+            // Render the survey as an expandable window
+            //$("#surveyContainer").SurveyWindow({model: survey});
+        });
+    </script>
+</body>
+
+</html>
